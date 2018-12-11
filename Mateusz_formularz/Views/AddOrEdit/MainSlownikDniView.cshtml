@@ -1,0 +1,124 @@
+﻿@model Mateusz_formularz.Models.SlownikDni
+@{
+    ViewBag.Title = "MainSlownikDniView";
+}
+
+
+@*CSS START*@
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    table {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+        background-color: #fff;
+    }
+
+        table th {
+            background-color: #B8DBFD;
+            color: #333;
+            font-weight: bold;
+        }
+
+        table th, table td {
+            padding: 5px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+        }
+
+        table, table table td {
+            border: 0px solid #ccc;
+        }
+
+    input[type=text], select {
+        width: 300px;
+    }
+</style>
+@*CSS END*@
+
+<br />
+@*INSERT LITURGICAL DAY FOR CHECKIGN DATABASE START*@
+<table>
+    <tr>
+        <td>Dzień liturgiczny:</td>
+        @using (Html.BeginForm("MainSlownikDniView", "AddOrEdit", FormMethod.Post))
+        {
+            <td>
+                @Html.TextBoxFor(m => m.Liturgical_day)
+                <input type="submit" name="submit" , id="submit_search" value="Wybierz" />
+            </td>
+        }
+    </tr>
+    @using (Html.BeginForm("MainSlownikDniView", "AddOrEdit", FormMethod.Post))
+    {
+        <tr>
+            <td align="center"><input type="submit" name="submit" value="Home" /></td>
+        </tr>
+    }
+    </table>
+<br />
+
+<h2>"SłownikDni": Dodawanie/Edycja </h2>
+@using (Html.BeginForm("MainSlownikDniView", "AddOrEdit", FormMethod.Post))
+{
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            <td>Dzień liturgiczny:</td>
+            <td>@Html.TextBoxFor(m => m.Liturgical_day)</td>
+
+        </tr>
+        <tr>
+            <td>Nazwa dnia:</td>
+            <td>@Html.TextAreaFor(m => m.Day_name, new { style = "width: 700px; height:150px;" })</td>
+        </tr>
+        <tr>
+            <td>Święto:</td>
+            <td>@Html.CheckBoxFor(m => m.Holyday)</td>
+        </tr>
+        <tr>
+            <td align="center"><input type="submit" name="submit" value="Dodaj" /></td>
+            <td align="center"><input type="submit" name="submit" value="Zapisz zmiany"/></td>
+        </tr>
+    </table>
+}
+
+<br />
+<div id="" style="overflow:scroll; height:400px;">
+    <table>
+        <tr>
+            <td>Dzień liturgiczny</td>
+            <td>Nazwa dnia</td>
+            <td>Świeto</td>
+        </tr>
+        @for (int i = 0; i < Model.SlownikDni_list.Count; i++)
+        {
+
+            using (Html.BeginForm("MainSlownikDniView", "AddOrEdit", FormMethod.Post))
+            {
+                <tr>
+                    <td>
+                    @Model.SlownikDni_list[i].Liturgical_day 
+                    @{ Model.Liturgical_day = Model.SlownikDni_list[i].Liturgical_day;}
+                    @Html.HiddenFor(m => m.Liturgical_day)
+                    </td>
+                    <td>
+                        @Model.SlownikDni_list[i].Day_name
+                        @{ Model.Day_name = Model.SlownikDni_list[i].Day_name;}
+                        @Html.HiddenFor(m => m.Day_name)
+                    </td>
+                    <td>
+                        @Model.SlownikDni_list[i].Holyday
+                        @{Model.Holyday = Model.SlownikDni_list[i].Holyday;}
+                        @Html.HiddenFor(m => m.Holyday)
+                    </td>
+                    <td><input type="submit" name="submit" value="Edytuj" /></td>
+                </tr>
+            }
+
+
+        }
+    </table>
+</div>

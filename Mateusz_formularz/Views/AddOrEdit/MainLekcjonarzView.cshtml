@@ -1,0 +1,146 @@
+﻿@model Mateusz_formularz.Models.Lekcjonarz
+@{ 
+    ViewBag.Title = "MainLekcjonarzView";
+}
+
+@*CSS START*@
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    table {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+        background-color: #fff;
+    }
+
+        table th {
+            background-color: #B8DBFD;
+            color: #333;
+            font-weight: bold;
+        }
+
+        table th, table td {
+            padding: 5px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+        }
+
+        table, table table td {
+            border: 0px solid #ccc;
+        }
+
+    input[type=text], select {
+        width: 250px;
+    }
+</style>
+@*CSS END*@
+
+
+<br />
+
+<table>
+    <tr>
+        @{  var list_dropdown_liturgical_day = new List<string>();}
+        <td>Dzień liturgiczny:</td>
+        @using (Html.BeginForm("MainLekcjonarzView", "AddOrEdit", FormMethod.Post))
+        {
+            for(int i=0;i<Model.Lekcjonarz_list_dropdown.Count;i++)
+            {
+                list_dropdown_liturgical_day.Add(Model.Lekcjonarz_list_dropdown[i].Liturgical_day);
+            }
+        <td>
+            @Html.DropDownListFor(m => m.Liturgical_day,new SelectList(list_dropdown_liturgical_day))
+            <input type="submit" name="submit" , id="submit_search" value="Wybierz" />
+        </td>
+        }
+    </tr>
+    <tr>
+        <td>
+            @using (Html.BeginForm("MainLekcjonarzView", "AddOrEdit", FormMethod.Post))
+            {
+        <input type="submit" name="submit" , id="submit_search" value="Home" />
+            }
+        </td>
+    </tr>
+</table>
+<br />
+<h2>"Lekcjonarz": Dodawanie/Edycja</h2>
+<table>
+    @using (Html.BeginForm("MainLekcjonarzView", "AddOrEdit", FormMethod.Post))
+    {
+        <tr>
+            <td>Id:</td>
+            <td>@Html.TextBoxFor(m => m.ID_lekcjonarz, new { @readonly = "readonly" })</td>
+        </tr>
+        <tr>
+            <td>Dzień liturgiczny:</td>
+            <td>@Html.TextBoxFor(m => m.Liturgical_day)</td>
+        </tr>
+        <tr>
+            <td>Typ czytania:</td>
+            <td>    @Html.DropDownListFor(m => m.Reading_type, new SelectList(new List<string>() { "1C", "1P", "2C", "E", "A", "K", "2P", "3C", "3P" }))</td>
+        </tr>
+        <tr>
+            <td>Siglum:</td>
+            <td>@Html.TextBoxFor(m => m.Siglum)</td>
+        </tr>
+        <tr>
+            <td>Tekst:</td>
+            <td>@Html.TextAreaFor(m => m.Text, new { style = "width: 600px; height:150px;" })</td>
+        </tr>
+        <tr>
+            <td align="center"><input type="submit" name="submit" value="Dodaj" /></td>
+            <td align="center"><input type="submit" name="submit" value="Zapisz zmiany" /></td>
+        </tr>
+    }
+    </table>
+<br />
+<div id="" style="overflow:scroll; height:400px;">
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Dzień liturgiczny</td>
+            <td>Typ_czytania</td>
+            <td>Siglum</td>
+            <td>Tekst</td>
+        </tr>
+        @for (int i = 0; i < Model.Lekcjonarz_list.Count; i++)
+    {
+         using (Html.BeginForm("MainLekcjonarzView", "AddOrEdit", FormMethod.Post))
+        {
+        <tr>
+            <td>
+                @Model.Lekcjonarz_list[i].ID_lekcjonarz
+                @{Model.ID_lekcjonarz = Model.Lekcjonarz_list[i].ID_lekcjonarz;}
+                @Html.HiddenFor(m => m.ID_lekcjonarz)
+            </td>
+            <td>
+                @Model.Lekcjonarz_list[i].Liturgical_day
+                @{Model.Liturgical_day = Model.Lekcjonarz_list[i].Liturgical_day;}
+                @Html.HiddenFor(m => m.Liturgical_day)
+            </td>
+            <td>
+                @Model.Lekcjonarz_list[i].Reading_type
+                @{Model.Reading_type = Model.Lekcjonarz_list[i].Reading_type;}
+                @Html.HiddenFor(m => m.Reading_type)
+            </td>
+            <td>
+                @Model.Lekcjonarz_list[i].Siglum
+                @{Model.Siglum = Model.Lekcjonarz_list[i].Siglum;}
+                @Html.HiddenFor(m => m.Siglum)
+            </td>
+            <td>
+                @Model.Lekcjonarz_list[i].Text
+                @{Model.Text = Model.Lekcjonarz_list[i].Text;}
+                @Html.HiddenFor(m => m.Text)
+            </td>
+   
+            <td><input type="submit" name="submit" value="Edytuj" /></td>
+        </tr>
+                        }
+                    }
+    </table>
+    </div>

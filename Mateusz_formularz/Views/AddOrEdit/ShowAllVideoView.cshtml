@@ -1,0 +1,59 @@
+﻿@model Mateusz_formularz.Models.Video
+@{
+    ViewBag.Title = "ShowAllVideoView";
+}
+
+@*CSS START*@
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    table {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+        background-color: #fff;
+    }
+
+        table th {
+            background-color: #B8DBFD;
+            color: #333;
+            font-weight: bold;
+        }
+
+        table th, table td {
+            padding: 5px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+        }
+
+        table, table table td {
+            border: 0px solid #ccc;
+        }
+
+    input[type=text], select {
+        width: 150px;
+    }
+</style>
+@*CSS END*@
+
+<h2>Dane z tabeli Video:</h2>
+<table>
+    <tr>
+        <td>Id</td><td>Data</td><td>Typ czytania</td><td>Youtube ID</td>
+    </tr>
+    @for (int i = 0; i < Model.Videos.Count; i++)
+    {
+    <tr>
+        <td>@Model.Videos[i].Id_Video</td>
+        <td>@Model.Videos[i].Date</td>
+        <td>@Model.Videos[i].Reading_type</td>
+        <td>@Model.Videos[i].Youtube_Id</td>
+    </tr>
+
+    }
+</table>
+
+
+

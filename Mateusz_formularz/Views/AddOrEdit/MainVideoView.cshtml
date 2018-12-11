@@ -1,0 +1,190 @@
+﻿@model Mateusz_formularz.Models.Video
+
+@{
+    ViewBag.Title = "MainVideoView";
+}
+
+@*CSS START*@
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    table {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+        background-color: #fff;
+    }
+
+        table th {
+            background-color: #B8DBFD;
+            color: #333;
+            font-weight: bold;
+        }
+
+        table th, table td {
+            padding: 5px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+        }
+
+        table, table table td {
+            border: 0px solid #ccc;
+        }
+
+    input[type=text], select {
+        width: 150px;
+    }
+</style>
+@*CSS END*@
+
+
+@*SELECT DATE FOR CHECKING DATABASE START*@
+<table>
+    <tr>
+        @if (Model.Date == null)
+        {
+            Model.Date = DateTime.Now;
+        }
+        <td colspan="2">
+
+            @using (Html.BeginForm("MainVideoView", "AddOrEdit", FormMethod.Post))
+            {
+                @Html.EditorFor(m => m.Date, new { htmlAttributes = new { @class = "video", @Value = Model.Date.Value.ToString("yyyy-MM-dd") } })
+                <input type="submit" name="submit" , id="submit_search" value="Wybierz" />
+            }
+        </td>
+        <td rowspan="2"> 
+        <a href='@Url.Action("ShowAllVideoView", "AddOrEdit")'>
+        <input type='button' value='Wyświetl wszystkie wpisy' />
+        </a>
+        </td>
+
+    <tr>
+        <td align="center">
+            @using (Html.BeginForm("MainVideoView", "AddOrEdit", FormMethod.Post))
+            {
+                <input type="hidden" name="Date" id="date_day_remove" value="@Model.Date.Value.AddDays(-1).ToString("yyyy-MM-dd")" />
+                <button>@Html.Raw("<")</button>
+            }
+        </td>
+        <td align="center">
+            @using (Html.BeginForm("MainVideoView", "AddOrEdit", FormMethod.Post))
+            {
+                <input type="hidden" name="Date" id="date_day_add" value="@Model.Date.Value.AddDays(1).ToString("yyyy-MM-dd")" />
+                <button>@Html.Raw(">")</button>
+            }
+        </td>
+
+    </tr>
+</table>
+<br />
+<h2>"Video": Dodawanie/Edycja</h2>
+@using (Html.BeginForm("MainVideoView", "AddOrEdit", FormMethod.Post))
+{
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            <td>ID:</td>
+            <td>@Html.TextBoxFor(m => m.Id_Video, new { @readonly = "readonly" })</td>
+
+        </tr>
+        <tr>
+            <td>Data:</td>
+            <td>@Html.TextBoxFor(m => m.Date, new { @readonly = "readonly" })</td>
+
+        </tr>
+        <tr>
+            <td>Rodzaj czytania:</td>
+            <td>
+                @Html.DropDownListFor(m => m.Reading_type, new SelectList(new List<string>() { "1C", "1P", "2C", "E", "K", "2P", "3C", "3P" }))
+            </td>
+        </tr>
+        <tr>
+            <td>Youtube Id:</td>
+            <td>@Html.TextBoxFor(m => m.Youtube_Id)</td>
+        </tr>
+        <tr>
+            <td align="center"><input type="submit" name="submit" value="Dodaj" /></td>
+            <td align="center"><input type="submit" name="submit" value="Zapisz zmiany" /></td>
+        </tr>
+    </table>
+}
+<br />
+
+<div id="" style="overflow:scroll; height:400px;">
+    @if (Model.Videos.Count != 0)
+    {
+        for (int i = 0; i < Model.Videos.Count; i++)
+        {
+
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Data</td>
+            <td>Typ czytania</td>
+            <td>Youtube ID</td>
+            <td>Video</td>
+        </tr>
+        @using (Html.BeginForm("MainVideoView", "AddOrEdit", FormMethod.Post))
+        {
+        <tr>
+
+            <td>
+                @Model.Videos[i].Id_Video
+                @{Model.Id_Video = Model.Videos[i].Id_Video;}
+                @Html.HiddenFor(m => m.Id_Video)
+            </td>
+            <td>
+                @Model.Videos[i].Date
+                @{Model.Date = Model.Videos[i].Date;}
+                @Html.HiddenFor(m => m.Date)
+            </td>
+            <td>
+                @Model.Videos[i].Reading_type 
+                @{Model.Reading_type = Model.Videos[i].Reading_type;}
+                @Html.HiddenFor(m => m.Reading_type)
+            </td>
+            <td>
+                @Model.Videos[i].Youtube_Id
+                @{Model.Youtube_Id = Model.Videos[i].Youtube_Id;}
+                @Html.HiddenFor(m => m.Youtube_Id)
+
+            </td>
+            <td>
+                <aside>
+                    <iframe id="ytplayer" type="text/html" width="100" height="100" src="https://www.youtube.com/embed/@Model.Videos[i].Youtube_Id" frameborder="0"></iframe>
+                </aside>
+            </td>
+            <td><input type="submit" name="submit" value="Edytuj" /></td>
+        </tr>
+                    }
+    </table>
+                <br />
+            }
+        }
+    </div>
+
+
+
+
+
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+    <script>
+        $(function () {
+            $(".video").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                showOn: "focus",
+
+            });
+
+
+        });
+    </script>
+}

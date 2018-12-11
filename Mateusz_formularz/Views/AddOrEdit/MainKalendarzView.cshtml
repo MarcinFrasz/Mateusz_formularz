@@ -1,0 +1,181 @@
+﻿@model  Mateusz_formularz.Models.Kalendarz
+@{
+    ViewBag.Title = "MainKalendarzView";
+}
+
+@*CSS START*@
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    table {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+        background-color: #fff;
+    }
+
+        table th {
+            background-color: #B8DBFD;
+            color: #333;
+            font-weight: bold;
+        }
+
+        table th, table td {
+            padding: 5px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+        }
+
+        table, table table td {
+            border: 0px solid #ccc;
+        }
+
+    input[type=text], select {
+        width: 150px;
+    }
+</style>
+@*CSS END*@
+
+<br />
+
+<table>
+    <tr>
+        @if (Model.Date == null)
+        {
+            Model.Date = DateTime.Now;
+        }
+        <td colspan="2">
+
+            @using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
+            {
+                @Html.EditorFor(m => m.Date, new { htmlAttributes = new { @class = "kalendarz", @Value = Model.Date.Value.ToString("yyyy-MM-dd") } })
+                <input type="submit" name="submit" , id="submit_search" value="Wybierz" />
+            }
+        </td>
+    <tr>
+        <td align="center">
+            @using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
+            {
+                <input type="hidden" name="Date" id="date_day_remove" value="@Model.Date.Value.AddDays(-1).ToString("yyyy-MM-dd")" />
+                <button>@Html.Raw("<")</button>
+            }
+        </td>
+        <td align="center">
+            @using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
+            {
+                <input type="hidden" name="Date" id="date_day_add" value="@Model.Date.Value.AddDays(1).ToString("yyyy-MM-dd")" />
+                <button>@Html.Raw(">")</button>
+            }
+        </td>
+
+    </tr>
+</table>
+<br />
+<h2>"Kalendarz" Dodaj/Edytuj</h2>
+@using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
+{
+
+    var list_dropdown_liturgical_day = new List<string>();
+    var list_dropdown_day_name = new List<string>();
+
+
+
+
+
+        for (int i = 0; i < Model.Kalendarz_list_dropdown_liturgical_day.Count; i++)
+    {
+        list_dropdown_liturgical_day.Add(Model.Kalendarz_list_dropdown_liturgical_day[i].Liturgical_day);
+        list_dropdown_day_name.Add(Model.Kalendarz_list_dropdown_liturgical_day[i].Day_name);
+    }
+    <table>
+        <tr>
+            <td>Data:</td>
+            <td>@Html.TextBoxFor(m => m.Date, new { @readonly = "readonly" })</td>
+        </tr>
+        <tr>
+            <td>Dzień liturgiczny:</td>
+            <td>@Html.DropDownListFor(m => m.Liturgical_day, new SelectList(list_dropdown_liturgical_day))</td>
+        </tr>
+        <tr>
+            <td>Nazwa dnia:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Komentarz źródło[1]:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Komentarz źródło[2]:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Id książka[1]:"</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Id książka[2]:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Id_książka[3]</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Numer tygodnia:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td align="center"><input type="submit" name="submit" value="Dodaj" /></td>
+            <td align="center"><input type="submit" name="submit" value="Zapisz zmiany" /></td>
+        </tr>
+    </table>
+}
+<br />
+
+
+<div id="" style="overflow:scroll; height:400px;">
+    <table>
+        <tr>
+            <td>Data</td><td>Dzień liturgiczny</td><td>Nazwa dnia:</td><td>Komentarz źródło[1]</td><td>Komentarz źródło[2]</td><td>Id_książka[1]</td><td>Id_książka[2]</td><td>Id_książka[3]</td><td>Numer tygodnia</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    </div>
+
+
+
+
+
+
+
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    @section scripts{
+        <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+        <script>
+            $(function () {
+                $(".kalendarz").datepicker({
+                    dateFormat: "yy-mm-dd",
+                    changeMonth: true,
+                    changeYear: true,
+                    showOn: "focus",
+
+                });
+
+
+            });
+        </script>
+    }
+
