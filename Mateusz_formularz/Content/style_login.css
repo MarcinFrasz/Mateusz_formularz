@@ -1,0 +1,42 @@
+﻿body {
+}
+form {
+    text-align: center;
+    box-sizing: border-box;
+    border: 3px solid #f1f1f1;
+    margin-left:30%;
+    margin-right:30%;
+    margin-top:10%;
+    margin-bottom:20%;
+}
+
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+    }
+
+table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.container
+{
+    text-align:center;
+}
+
+.logpass {
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}

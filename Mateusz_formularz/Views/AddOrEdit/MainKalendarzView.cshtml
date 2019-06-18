@@ -3,179 +3,237 @@
     ViewBag.Title = "MainKalendarzView";
 }
 
-@*CSS START*@
-<style type="text/css">
-    body {
-        font-family: Arial;
-        font-size: 10pt;
-    }
+<link rel="stylesheet" type="text/css" href="~/Content/style.css">
 
-    table {
-        border: 1px solid #ccc;
-        border-collapse: collapse;
-        background-color: #fff;
-    }
 
-        table th {
-            background-color: #B8DBFD;
-            color: #333;
-            font-weight: bold;
-        }
-
-        table th, table td {
-            padding: 5px;
-            border: 1px solid #ccc;
-            font-weight: bold;
-        }
-
-        table, table table td {
-            border: 0px solid #ccc;
-        }
-
-    input[type=text], select {
-        width: 150px;
-    }
-</style>
-@*CSS END*@
-
-<br />
 
 <table>
     <tr>
         @if (Model.Date == null)
         {
-            Model.Date = DateTime.Now;
+            var now = DateTime.Now;
+            DateTime? date = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
+            Model.Date = date;
         }
         <td colspan="2">
 
             @using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
             {
                 @Html.EditorFor(m => m.Date, new { htmlAttributes = new { @class = "kalendarz", @Value = Model.Date.Value.ToString("yyyy-MM-dd") } })
-                <input type="submit" name="submit" , id="submit_search" value="Wybierz" />
+                <input class="ui-button" type="submit" name="submit" , id="submit_search" value="Wybierz" />
             }
         </td>
     <tr>
         <td align="center">
             @using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
             {
-                <input type="hidden" name="Date" id="date_day_remove" value="@Model.Date.Value.AddDays(-1).ToString("yyyy-MM-dd")" />
-                <button>@Html.Raw("<")</button>
+                <input class="ui-button" type="hidden" name="Date" id="date_day_remove" value="@Model.Date.Value.AddDays(-1).ToString("yyyy-MM-dd")" />
+                <button class="ui-button">@Html.Raw("<")</button>
             }
         </td>
         <td align="center">
             @using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
             {
-                <input type="hidden" name="Date" id="date_day_add" value="@Model.Date.Value.AddDays(1).ToString("yyyy-MM-dd")" />
-                <button>@Html.Raw(">")</button>
+                <input class="ui-button" type="hidden" name="Date" id="date_day_add" value="@Model.Date.Value.AddDays(1).ToString("yyyy-MM-dd")" />
+                <button class="ui-button">@Html.Raw(">")</button>
             }
         </td>
-
     </tr>
+    @using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
+    {
+        <tr>
+            <td align="center"><input class="ui-button" type="submit" name="submit" value="Home" /></td>
+        </tr>
+    }
 </table>
 <br />
 <h2>"Kalendarz" Dodaj/Edytuj</h2>
+
+@{
+    List<String> list_liturgicalday_dropdown = new List<string>();
+    list_liturgicalday_dropdown = ViewBag.kalendarz_liturgicalday_dropdown;
+
+    List<String> list_commentsource_dropdown = new List<string>();
+    list_commentsource_dropdown = ViewBag.kalendarz_commentsource_dropdown;
+
+    List<string> list_bookid_dropdown = new List<string>();
+    list_bookid_dropdown = ViewBag.kalendarz_bookid_dropdown;
+}
+
 @using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
 {
 
-    var list_dropdown_liturgical_day = new List<string>();
-    var list_dropdown_day_name = new List<string>();
+<table>
+    <tr>
+        <td>Data:</td>
+        <td>@Html.TextBoxFor(m => m.Date, new { @readonly = "readonly", @class = "form-control", placeholder = "", required = "required" })</td>
+    </tr>
+    <tr>
+        <td>Dzień liturgiczny:</td>
+        <td>
+            @Html.DropDownListFor(m => m.Liturgical_day, new SelectList(list_liturgicalday_dropdown), "--Wybierz--", new { @class = "form-control" })
+        </td>
 
+    </tr>
+    <tr>
+        <td>Nazwa dnia:</td>
+        <td>@Html.TextAreaFor(m => m.Day_name, new { style = "width: 600px; height:50px;", @readonly = "readonly", @class = "form-control", placeholder = "", required = "required" })</td>
+    </tr>
+    <tr>
+        <td>Komentarz źródło[1]:</td>
+        <td>@Html.DropDownListFor(m => m.Comment_source1, new SelectList(list_commentsource_dropdown), new { @class = "form-control" })</td>
 
-
-
-
-        for (int i = 0; i < Model.Kalendarz_list_dropdown_liturgical_day.Count; i++)
-    {
-        list_dropdown_liturgical_day.Add(Model.Kalendarz_list_dropdown_liturgical_day[i].Liturgical_day);
-        list_dropdown_day_name.Add(Model.Kalendarz_list_dropdown_liturgical_day[i].Day_name);
-    }
-    <table>
-        <tr>
-            <td>Data:</td>
-            <td>@Html.TextBoxFor(m => m.Date, new { @readonly = "readonly" })</td>
-        </tr>
-        <tr>
-            <td>Dzień liturgiczny:</td>
-            <td>@Html.DropDownListFor(m => m.Liturgical_day, new SelectList(list_dropdown_liturgical_day))</td>
-        </tr>
-        <tr>
-            <td>Nazwa dnia:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Komentarz źródło[1]:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Komentarz źródło[2]:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Id książka[1]:"</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Id książka[2]:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Id_książka[3]</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Numer tygodnia:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td align="center"><input type="submit" name="submit" value="Dodaj" /></td>
-            <td align="center"><input type="submit" name="submit" value="Zapisz zmiany" /></td>
-        </tr>
-    </table>
+    </tr>
+    <tr>
+        <td>Komentarz źródło[2]:</td>
+        <td>@Html.DropDownListFor(m => m.Comment_source2, new SelectList(list_commentsource_dropdown), new { @class = "form-control" })</td>
+    </tr>
+    <tr>
+        <td>Id książka[1]:"</td>
+        <td>@Html.DropDownListFor(m => m.book_name, new SelectList(list_bookid_dropdown), new { @class = "form-control" })</td>
+    </tr>
+    <tr>
+        <td>Numer tygodnia:</td>
+        <td>@Html.TextBoxFor(m => m.week_number, new { @class = "form-control", placeholder = "", required = "required", pattern = @"^([2-9]{1}[0-9]{3}[0-5]{1}[0-9]{1})$" })</td>
+    </tr>
+    <tr>
+        <td>Wyświetl patrona:</td>
+        <td>@Html.CheckBoxFor(m => m.patroni_show)</td>
+    </tr>
+    <tr>
+    <tr>
+        <td align="center"><input class="ui-button" type="submit" name="submit" value="Dodaj" /></td>
+        <td align="center"><input class="ui-button" type="submit" name="submit" value="Zapisz zmiany" /></td>
+    </tr>
+</table>
 }
 <br />
 
 
 <div id="" style="overflow:scroll; height:400px;">
-    <table>
-        <tr>
-            <td>Data</td><td>Dzień liturgiczny</td><td>Nazwa dnia:</td><td>Komentarz źródło[1]</td><td>Komentarz źródło[2]</td><td>Id_książka[1]</td><td>Id_książka[2]</td><td>Id_książka[3]</td><td>Numer tygodnia</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
-    </div>
+    @if (Model.Kalendarz_list.Count != 0)
+    {
 
+        for (int i = 0; i < Model.Kalendarz_list.Count; i++)
+        {
 
+            using (Html.BeginForm("MainKalendarzView", "AddOrEdit", FormMethod.Post))
+            {
+                <table class="table table-hover">
+                    <tr>
+                        <td>Data</td>
+                        <td>Dzień liturgiczny</td>
+                        <td>Nazwa dnia</td>
+                        <td>Komentarz źródło[1]</td>
+                        <td>Komentarz źródło[2]</td>
+                        <td>Id_książka[1]</td>
+                        <td>Numer tygodnia</td>             
+                    </tr>
+                    <tr>
+                        <td>
+                            @Model.Kalendarz_list[i].Date
+                            @{Model.Date = Model.Kalendarz_list[i].Date;}
+                            @Html.HiddenFor(m => m.Date)
+                        </td>
+                        <td>
+                            @Model.Kalendarz_list[i].Liturgical_day
+                            @{Model.Liturgical_day = Model.Kalendarz_list[i].Liturgical_day;}
+                            @Html.HiddenFor(m => m.Liturgical_day)
+                        </td>
+                        <td>
+                            @Model.Kalendarz_list[i].Day_name
+                            @{Model.Day_name = Model.Kalendarz_list[i].Day_name;}
+                            @Html.HiddenFor(m => m.Day_name)
+                        </td>
+                        <td>
+                            @Model.Kalendarz_list[i].Comment_source1
+                            @{Model.Comment_source1 = Model.Kalendarz_list[i].Comment_source1;}
+                            @Html.HiddenFor(m => m.Comment_source1)
+                        </td>
+                        <td>
+                            @Model.Kalendarz_list[i].Comment_source2
+                            @{Model.Comment_source2 = Model.Kalendarz_list[i].Comment_source2;}
+                            @Html.HiddenFor(m => m.Comment_source2)
+                        </td>
+                        <td>
+                            @Model.Kalendarz_list[i].id_book1
+                            @{Model.id_book1 = Model.Kalendarz_list[i].id_book1;}
+                            @Html.HiddenFor(m => m.id_book1)
+                        </td>                      
+                        <td>
+                            @Model.Kalendarz_list[i].week_number
+                            @{Model.week_number = Model.Kalendarz_list[i].week_number;}
+                            @Html.HiddenFor(m => m.week_number)
+                        </td>
+                       
+                        <td>
+                        <input class="ui-button" type="submit" name="submit" value="Edytuj" />
+                        <br /><br />
+                        <input class="ui-button" type="submit" name="submit" value="Usuń" />
+                        </td>
 
+                    </tr>
 
+                </table>
+            }
+        }
+    }
+</div>
 
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
 
-
-    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
-    @section scripts{
-        <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
-
-        <script>
-            $(function () {
-                $(".kalendarz").datepicker({
-                    dateFormat: "yy-mm-dd",
-                    changeMonth: true,
-                    changeYear: true,
-                    showOn: "focus",
-
-                });
-
+    <script>
+        $(function () {
+            $(".kalendarz").datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                showOn: "focus",
 
             });
+
+
+        });
+    </script>
+
+    <script type="text/javascript">
+
+                $(function () {
+
+         $("#Liturgical_day").change(function() {
+             var t = $(this).val();
+             var t2 = $("#Date").val();
+             if (t !== "") {
+
+                 $.post("@Url.Action("GetValues","AddOrEdit")?val=" + t,"date="+t2, function (res) {
+
+                                    if (res.Success === "true") {
+                                        $("#Day_name").val(res.Day_name);
+                                    } else {
+                                        alert("Data read error");
+                                    }
+                 });
+                            }
+                        });
+                    });
+    </script>
+        @if (ViewBag.Message != null)
+    {
+        <script>
+
+$(document).ready(function(){
+
+alert('@ViewBag.Message');
+
+});
+
         </script>
     }
+}
+}
+
+
+
 

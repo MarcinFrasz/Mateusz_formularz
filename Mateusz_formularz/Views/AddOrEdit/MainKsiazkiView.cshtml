@@ -1,41 +1,143 @@
-﻿
+﻿@model  Mateusz_formularz.Models.Ksiazki
 @{
     ViewBag.Title = "MainKsiazkiView";
 }
 
-@*CSS START*@
-<style type="text/css">
-    body {
-        font-family: Arial;
-        font-size: 10pt;
-    }
+<link rel="stylesheet" type="text/css" href="~/Content/style.css">
+@Html.AntiForgeryToken()
+<div class="container">
+    <table>
+        <tr>
+            @{
+                List<String> book_id_list = new List<String>();
+                book_id_list = ViewBag.kalendarz_bookid_dropdown;
+            }
+            <td colspan="2">
 
-    table {
-        border: 1px solid #ccc;
-        border-collapse: collapse;
-        background-color: #fff;
-    }
-
-        table th {
-            background-color: #B8DBFD;
-            color: #333;
-            font-weight: bold;
+                @using (Html.BeginForm("MainKsiazkiView", "AddOrEdit", FormMethod.Post))
+                {
+                    @Html.DropDownListFor(m => m.Title, new SelectList(book_id_list), new { @class = "form-control" });
+                    <input class="ui-button" type="submit" name="submit" , id="submit_search" value="Wybierz" />
+                }
+            </td>
+        </tr>
+        @using (Html.BeginForm("MainKsiazkiView", "AddOrEdit", FormMethod.Post))
+        {
+            <tr>
+                <td align="center"><input class="ui-button" type="submit" name="submit" value="Home" /></td>
+            </tr>
         }
-
-        table th, table td {
-            padding: 5px;
-            border: 1px solid #ccc;
-            font-weight: bold;
+    </table>
+    <br />
+    <h2>"Książki" Dodaj/Edytuj</h2>
+    <table>
+        @using (Html.BeginForm("MainKsiazkiView", "AddOrEdit", FormMethod.Post))
+        {
+            <tr>
+                <td>Id książki:</td>
+                <td>@Html.TextBoxFor(m => m.ID_book, new { @readonly = "readonly", @class = "form-control", placeholder = "", required = "required" })</td>
+            </tr>
+            <tr>
+                <td>Id kmt:</td>
+                <td>@Html.TextBoxFor(m => m.ID_kmt, new { @class = "form-control", placeholder = "", required = "required" })</td>
+            </tr>
+            <tr>
+                <td>Tytuł:</td>
+                <td>
+                    @Html.TextAreaFor(m => m.Title, new { style = "width: 600px; height:150px;", @class = "form-control", placeholder = "", required = "required" })
+                </td>
+            </tr>
+            <tr>
+                <td>Autor:</td>
+                <td>@Html.TextBoxFor(m => m.Author, new { style = "width: 600px;", @class = "form-control" })</td>
+            </tr>
+            <tr>
+                <td>Zdjęcie:</td>
+                <td>@Html.TextBoxFor(m => m.Photo, new { style = "width: 600px;", @class = "form-control", placeholder = "", required = "required" })</td>
+            </tr>
+            <tr>
+                <td>Opis:</td>
+                <td>@Html.TextAreaFor(m => m.Description, new { style = "width: 600px; height:150px;", @class = "form-control", placeholder = "", required = "required" })</td>
+            </tr>
+            <tr>
+                <td align="center"><input class="ui-button" type="submit" name="submit" value="Dodaj" /></td>
+                <td align="center"><input class="ui-button" type="submit" name="submit" value="Zapisz zmiany" /></td>
+            </tr>
         }
+    </table>
+    <br />
+    <div id="" style="overflow:scroll; height:400px;">
+        <table class="table table-hover">
+            <tr>
+                <td>ID_ksiazki</td>
+                <td>ID_kmt</td>
+                <td>Tytuł</td>
+                <td>Autor</td>
+                <td>Foto</td>
+                <td>Opis</td>
+            </tr>
+            @for (int i = 0; i < Model.Ksiazki_list.Count; i++)
+            {
+                using (Html.BeginForm("MainKsiazkiView", "AddOrEdit", FormMethod.Post))
+                {
+            <tr>
+                <td>
+                    @Model.Ksiazki_list[i].ID_book
+                    @{Model.ID_book = Model.Ksiazki_list[i].ID_book;}
+                    @Html.HiddenFor(m => m.ID_book)
+                </td>
+                <td>
+                    @Model.Ksiazki_list[i].ID_kmt
+                    @{Model.ID_kmt = Model.Ksiazki_list[i].ID_kmt;}
+                    @Html.HiddenFor(m => m.ID_kmt)
+                </td>
+                <td>
+                    @Model.Ksiazki_list[i].Title
+                    @{Model.Title = Model.Ksiazki_list[i].Title;}
+                    @Html.HiddenFor(m => m.Title)
+                </td>
+                <td>
+                    @Model.Ksiazki_list[i].Author
+                    @{Model.Author = Model.Ksiazki_list[i].Author;}
+                    @Html.HiddenFor(m => m.Author)
+                </td>
+                <td>
+                    @Model.Ksiazki_list[i].Photo
+                    @{Model.Photo = Model.Ksiazki_list[i].Photo;}
+                    @Html.HiddenFor(m => m.Photo)
+                </td>
+                <td>
+                    @Model.Ksiazki_list[i].Description
+                    @{Model.Description = Model.Ksiazki_list[i].Description;}
+                    @Html.HiddenFor(m => m.Description)
+                </td>
 
-        table, table table td {
-            border: 0px solid #ccc;
-        }
+                <td>
+                    <input class="ui-button" type="submit" name="submit" value="Edytuj" />
+                    <br /><br />
+                    <input class="ui-button" type="submit" name="submit" value="Usuń" />
+                </td>
+            </tr>
+                }
+            }
+        </table>
+    </div>
+</div>
 
-    input[type=text], select {
-        width: 150px;
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+    @if (ViewBag.Message != null)
+    {
+        <script>
+
+$(document).ready(function(){
+
+alert('@ViewBag.Message');
+
+});
+
+        </script>
     }
-</style>
-@*CSS END*@
-
-
+}

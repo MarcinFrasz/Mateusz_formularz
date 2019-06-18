@@ -1,70 +1,48 @@
 ﻿@model Mateusz_formularz.Models.Lekcjonarz
-@{ 
+@{
     ViewBag.Title = "MainLekcjonarzView";
 }
 
-@*CSS START*@
-<style type="text/css">
-    body {
-        font-family: Arial;
-        font-size: 10pt;
-    }
-
-    table {
-        border: 1px solid #ccc;
-        border-collapse: collapse;
-        background-color: #fff;
-    }
-
-        table th {
-            background-color: #B8DBFD;
-            color: #333;
-            font-weight: bold;
-        }
-
-        table th, table td {
-            padding: 5px;
-            border: 1px solid #ccc;
-            font-weight: bold;
-        }
-
-        table, table table td {
-            border: 0px solid #ccc;
-        }
-
-    input[type=text], select {
-        width: 250px;
-    }
-</style>
-@*CSS END*@
+<link rel="stylesheet" type="text/css" href="~/Content/style.css">
+@Html.AntiForgeryToken()
 
 
-<br />
+
 
 <table>
     <tr>
-        @{  var list_dropdown_liturgical_day = new List<string>();}
+        @{
+            List<String> list_liturgicalday_dropdown = new List<string>();
+            list_liturgicalday_dropdown = ViewBag.kalendarz_liturgicalday_dropdown;
+        }
         <td>Dzień liturgiczny:</td>
         @using (Html.BeginForm("MainLekcjonarzView", "AddOrEdit", FormMethod.Post))
         {
-            for(int i=0;i<Model.Lekcjonarz_list_dropdown.Count;i++)
-            {
-                list_dropdown_liturgical_day.Add(Model.Lekcjonarz_list_dropdown[i].Liturgical_day);
-            }
-        <td>
-            @Html.DropDownListFor(m => m.Liturgical_day,new SelectList(list_dropdown_liturgical_day))
-            <input type="submit" name="submit" , id="submit_search" value="Wybierz" />
-        </td>
+
+            <td>
+                @Html.DropDownListFor(m => m.Liturgical_day, new SelectList(list_liturgicalday_dropdown), new { @class = "form-control" })
+                <input class="ui-button" type="submit" name="submit" , id="submit_search" value="Wybierz" />
+            </td>
         }
     </tr>
     <tr>
         <td>
             @using (Html.BeginForm("MainLekcjonarzView", "AddOrEdit", FormMethod.Post))
             {
-        <input type="submit" name="submit" , id="submit_search" value="Home" />
+                <input class="ui-button" type="submit" name="submit" , id="submit_search" value="Home" />
             }
         </td>
     </tr>
+    @using (Html.BeginForm("MainSlownikDniView", "AddOrEdit", FormMethod.Post))
+    {
+        <tr>
+            <td>Dzień liturgiczny:</td>
+            <td>
+                @Html.TextBoxFor(m => m.Liturgical_day_search, new { @class = "form-control", placeholder = "", required = "required", pattern = @"^([0-9A-Z]{8})$" })
+            <input class="ui-button" type="submit" name="submit" value="Szukaj" />
+        </td>
+    </tr>
+}
 </table>
 <br />
 <h2>"Lekcjonarz": Dodawanie/Edycja</h2>
@@ -72,34 +50,40 @@
     @using (Html.BeginForm("MainLekcjonarzView", "AddOrEdit", FormMethod.Post))
     {
         <tr>
-            <td>Id:</td>
-            <td>@Html.TextBoxFor(m => m.ID_lekcjonarz, new { @readonly = "readonly" })</td>
+            <td>Id dzień liturgiczny:</td>
+            <td>@Html.TextBoxFor(m => m.ID_lekcjonarz, new { @readonly = "readonly", @class = "form-control", placeholder = "", required = "required" })</td>
         </tr>
         <tr>
             <td>Dzień liturgiczny:</td>
-            <td>@Html.TextBoxFor(m => m.Liturgical_day)</td>
+            <td>@Html.DropDownListFor(m => m.Liturgical_day, new SelectList(list_liturgicalday_dropdown), new { @class = "form-control" })</td>
         </tr>
         <tr>
             <td>Typ czytania:</td>
-            <td>    @Html.DropDownListFor(m => m.Reading_type, new SelectList(new List<string>() { "1C", "1P", "2C", "E", "A", "K", "2P", "3C", "3P" }))</td>
+            <td>
+                @{
+                    List<string> S_reading_types_list = new List<string>();
+                    S_reading_types_list = ViewBag.S_reading_types;
+                }
+                @Html.DropDownListFor(m => m.Reading_type, new SelectList(S_reading_types_list), new { @class = "form-control" })
+            </td>
         </tr>
         <tr>
             <td>Siglum:</td>
-            <td>@Html.TextBoxFor(m => m.Siglum)</td>
+            <td>@Html.TextBoxFor(m => m.Siglum, new { @class = "form-control" })</td>
         </tr>
         <tr>
             <td>Tekst:</td>
-            <td>@Html.TextAreaFor(m => m.Text, new { style = "width: 600px; height:150px;" })</td>
+            <td>@Html.TextAreaFor(m => m.Text, new { style = "width: 600px; height:150px;", @class = "form-control", placeholder = "", required = "required" })</td>
         </tr>
         <tr>
-            <td align="center"><input type="submit" name="submit" value="Dodaj" /></td>
-            <td align="center"><input type="submit" name="submit" value="Zapisz zmiany" /></td>
+            <td align="center"><input class="ui-button" type="submit" name="submit" value="Dodaj" /></td>
+            <td align="center"><input class="ui-button" type="submit" name="submit" value="Zapisz zmiany" /></td>
         </tr>
     }
-    </table>
+</table>
 <br />
 <div id="" style="overflow:scroll; height:400px;">
-    <table>
+    <table class="table table-hover">
         <tr>
             <td>ID</td>
             <td>Dzień liturgiczny</td>
@@ -108,9 +92,9 @@
             <td>Tekst</td>
         </tr>
         @for (int i = 0; i < Model.Lekcjonarz_list.Count; i++)
-    {
-         using (Html.BeginForm("MainLekcjonarzView", "AddOrEdit", FormMethod.Post))
         {
+            using (Html.BeginForm("MainLekcjonarzView", "AddOrEdit", FormMethod.Post))
+            {
         <tr>
             <td>
                 @Model.Lekcjonarz_list[i].ID_lekcjonarz
@@ -137,10 +121,32 @@
                 @{Model.Text = Model.Lekcjonarz_list[i].Text;}
                 @Html.HiddenFor(m => m.Text)
             </td>
-   
-            <td><input type="submit" name="submit" value="Edytuj" /></td>
+
+            <td>
+                <input class="ui-button" type="submit" name="submit" value="Edytuj" />
+                <br /><br />
+                <input class="ui-button" type="submit" name="submit" value="Usuń" />
+            </td>
         </tr>
-                        }
-                    }
+            }
+        }
     </table>
-    </div>
+</div>
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+    @if (ViewBag.Message != null)
+    {
+        <script>
+
+$(document).ready(function(){
+
+alert('@ViewBag.Message');
+
+});
+
+        </script>
+    }
+}

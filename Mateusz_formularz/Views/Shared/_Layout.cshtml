@@ -21,14 +21,23 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Video", "MainVideoView", "AddOrEdit")</li>
-                    <li>@Html.ActionLink("Słownik dni", "MainSlownikDniView", "AddOrEdit")</li>
-                    <li>@Html.ActionLink("Lekcjonarz", "MainLekcjonarzView", "AddOrEdit")</li>
-                    <li>@Html.ActionLink("Kalendarz", "MainKalendarzView", "AddOrEdit")</li>
-                    <li>@Html.ActionLink("Komentarze", "MainKomentarzeView", "AddOrEdit")</li>
-                    <li>@Html.ActionLink("Książki", "MainKsiazkiView", "AddOrEdit")</li>
+
+                    <li class="btn-link">@Html.ActionLink("Video", "MainVideoView", "AddOrEdit")</li>
+                    <li class="btn-link">@Html.ActionLink("Słownik dni", "MainSlownikDniView", "AddOrEdit")</li>
+                    <li class="btn-link">@Html.ActionLink("Lekcjonarz", "MainLekcjonarzView", "AddOrEdit")</li>
+                    <li class="btn-link">@Html.ActionLink("Komentarze", "MainKomentarzeView", "AddOrEdit")</li>
+                    <li class="btn-link">@Html.ActionLink("Książki", "MainKsiazkiView", "AddOrEdit")</li>
+                    <li class="btn-link">@Html.ActionLink("Patroni", "MainPatroniView", "AddOrEdit")</li>
+                    <li class="btn-link">@Html.ActionLink("Kalendarz", "MainKalendarzView", "AddOrEdit")</li>
                 </ul>
+                <ol class="navbar-header pull-right">
+                    <ul class="nav navbar-nav">
+                        
+                       <li class="btn-link"> @Html.ActionLink("Logout", "Logout_action", "AddOrEdit")</li>
+                        </ul>
+                </ol>
             </div>
+           
         </div>
     </div>
     <div class="container body-content">

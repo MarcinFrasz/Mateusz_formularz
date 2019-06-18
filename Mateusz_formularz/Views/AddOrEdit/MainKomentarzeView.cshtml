@@ -4,79 +4,124 @@
 }
 
 
-@*CSS START*@
-<style type="text/css">
-    body {
-        font-family: Arial;
-        font-size: 10pt;
-    }
+<link rel="stylesheet" type="text/css" href="~/Content/style.css">
 
-    table {
-        border: 1px solid #ccc;
-        border-collapse: collapse;
-        background-color: #fff;
-    }
+@{
+    List<String> list_liturgicalday_dropdown = new List<string>();
+    List<String> list_comment_source_dropdown = new List<string>();
+    list_liturgicalday_dropdown = ViewBag.kalendarz_liturgicalday_dropdown;
+    list_comment_source_dropdown = ViewBag.kalendarz_comment_source;
 
-        table th {
-            background-color: #B8DBFD;
-            color: #333;
-            font-weight: bold;
-        }
+}
 
-        table th, table td {
-            padding: 5px;
-            border: 1px solid #ccc;
-            font-weight: bold;
-        }
 
-        table, table table td {
-            border: 0px solid #ccc;
-        }
-
-    input[type=text], select {
-        width: 300px;
-    }
-</style>
-@*CSS END*@
-<br />
 <table>
     <tr>
         <td>
-            @Html.TextBoxFor(m => m.Liturgical_day)
-            <input type="submit" name="submit" , id="submit_search" value="Wybierz" />
+            @using (Html.BeginForm("MainKomentarzeView", "AddOrEdit", FormMethod.Post))
+            {
+                @Html.DropDownListFor(m => m.Liturgical_day, new SelectList(list_liturgicalday_dropdown), new { @class = "form-control" })
+                <input class="ui-button" type="submit" name="submit" , id="submit_search" value="Wybierz" />
+            }
         </td>
     </tr>
+    @using (Html.BeginForm("MainKomentarzeView", "AddOrEdit", FormMethod.Post))
+    {
+        <tr>
+            <td align="center"><input class="ui-button" type="submit" name="submit" value="Home" /></td>
+        </tr>
+    }
 </table>
 <br />
 <h2>"Komentarze":Dodaj/Edytuj</h2>
-<table>
-    <tr>
-        <td>Dzień liturgiczny:</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Komentarz źródło:</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Tekst:</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td align="center"><input type="submit" name="submit" value="Dodaj" /></td>
-        <td align="center"><input type="submit" name="submit" value="Zapisz zmiany" /></td>
-    </tr>
-</table>
-<br />
-<div id="" style="overflow:scroll; height:400px;">
+
+@using (Html.BeginForm("MainKomentarzeView", "AddOrEdit", FormMethod.Post))
+{
     <table>
         <tr>
-            <td>Dzień liturgiczny:</td><td>Komentarz źródło</td><td>Tekst</td>
+           <td>Id komentarza:</td>
+           <td>@Html.TextBoxFor(m => m.ID_comment, new { @readonly = "readonly", @class = "form-control", placeholder = "", required = "required" })</td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Dzień liturgiczny:</td>
+            <td>@Html.DropDownListFor(m => m.Liturgical_day, new SelectList(list_liturgicalday_dropdown), new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td>Komentarz źródło:</td>
+            <td> @Html.DropDownListFor(m => m.Comment_source,new SelectList(list_comment_source_dropdown), new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td>Tekst:</td>
+            <td> @Html.TextAreaFor(m => m.Text, new { style = "width: 600px;height: 150px;" , @class = "form-control", placeholder = "", required = "required" })</td>
+        </tr>
+        <tr>
+            <td align="center"><input class="ui-button" type="submit" name="submit" value="Dodaj" /></td>
+            <td align="center"><input class="ui-button" type="submit" name="submit" value="Zapisz zmiany" /></td>
         </tr>
     </table>
-    </div>
+}
+<br />
+<div id="" style="overflow:scroll; height:400px;">
+    <table class="table table-hover">
+        <tr>
+            <td>Id komentarza</td>
+            <td>Dzień liturgiczny:</td>
+            <td>Komentarz źródło</td>
+            <td>Tekst</td>
+        </tr>
+        @for (int i = 0; i < Model.Komentarze_list.Count; i++)
+        {
+            using (Html.BeginForm("MainKomentarzeView", "AddOrEdit", FormMethod.Post))
+            {
+        <tr>
+
+            <td>
+                @Model.Komentarze_list[i].ID_comment
+                @{Model.ID_comment = Model.Komentarze_list[i].ID_comment;}
+                @Html.HiddenFor(m => m.ID_comment)
+            </td>
+            <td>
+                @Model.Komentarze_list[i].Liturgical_day
+                @{Model.Liturgical_day = Model.Komentarze_list[i].Liturgical_day;}
+                @Html.HiddenFor(m => m.Liturgical_day)
+            </td>
+            <td>
+                @Model.Komentarze_list[i].Comment_source
+                @{Model.Comment_source = Model.Komentarze_list[i].Comment_source;}
+                @Html.HiddenFor(m => m.Comment_source)
+            </td>
+            <td>
+                @Model.Komentarze_list[i].Text
+                @{Model.Text = Model.Komentarze_list[i].Text;}
+                @Html.HiddenFor(m => m.Text)
+            </td>
+            <td>
+                <input class="ui-button" type="submit" name="submit" value="Edytuj" />
+                <br /><br />
+                <input class="ui-button" type="submit" name="submit" value="Usuń" />
+            </td>
+
+        </tr>
+            }
+        }
+    </table>
+</div>
+
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+    @if (ViewBag.Message != null)
+    {
+        <script>
+
+$(document).ready(function(){
+
+alert('@ViewBag.Message');
+
+});
+
+        </script>
+    }
+}
